@@ -1,9 +1,10 @@
 /* assumptions: no party will get over 50% of votes
                 no non-5% party will get more than 1 electorate
+   to do:       refactor!
 */                
 
 import xs from 'xstream'
-import {div, input, h2} from '@cycle/dom'
+import {div, input, h2, button} from '@cycle/dom'
 
 function renderPartySlider (party, vote, electorate) {
 return div([
@@ -19,17 +20,20 @@ function total (national, labour, greens, nzf, act, top, māori, other) {
 
 function view(state$) {
   return state$.map(({national, labour, greens, nzf, act, top, māori, other, total}) =>
-  div([
-  renderPartySlider('National', national, true),
-  renderPartySlider('Labour', labour, true),
-  renderPartySlider('Greens', greens, false),
-  renderPartySlider('NZF', nzf, false),
-  renderPartySlider('Act', act, true),
-  renderPartySlider('TOP', top, false),
-  renderPartySlider('Māori', māori, false),
-  renderPartySlider('Other', other, false),
-    h2(total +'% of votes counted')
-  ])
+    div('.sliders', [
+      renderPartySlider('National', national, true),
+      renderPartySlider('Labour', labour, true),
+      renderPartySlider('Greens', greens, false),
+      renderPartySlider('NZF', nzf, false),
+      renderPartySlider('Act', act, true),
+      renderPartySlider('TOP', top, false),
+      renderPartySlider('Māori', māori, false),
+      renderPartySlider('Other', other, false),
+      h2(total +'% of votes counted'),
+      div('.button',[
+        button('.calculate', 'Calculate seats')
+      ])
+    ])
   )
 }
 
@@ -50,7 +54,12 @@ function intent(domSource) {
     changeMāori$: domSource.select('.Māori').events('input')
     .map(ev => ev.target.value),  
     changeOther$: domSource.select('.Other').events('input')
-    .map(ev => ev.target.value)
+    .map(ev => ev.target.value),
+
+    calculate$: domSource.select('.calculate').events('click')
+    .map(() => {
+      
+    })
   }
 }
 
