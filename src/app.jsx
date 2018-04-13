@@ -4,7 +4,7 @@
 */                
 
 import xs from 'xstream'
-import {calculateVotes, saintLague} from './functions.js'
+import {calculate} from './functions.js'
 import {renderSliders, total} from './utils.js'
 
 function view(state$) {
@@ -59,9 +59,11 @@ function model(actions) {
   const other$ = xs.combine(actions.changeOther$.startWith(1.0), actions.changeOtherE$.startWith(false))
 
   return xs.combine(national$, labour$, greens$, nzf$, act$, top$, māori$, other$)
-  .map(([national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE]) => {
+  .map(([national, labour, greens, nzf, act, top, māori, other]) => {
     return {national, labour, greens, nzf, act, top, māori, other, 
-            total: total(national, labour, greens, nzf, act, top, māori, other)}
+            total: total(national, labour, greens, nzf, act, top, māori, other),
+            calculate: calculate([national, labour, greens, nzf, act, top, māori, other])
+          }
   })
 }
 

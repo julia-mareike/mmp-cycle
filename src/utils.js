@@ -1,11 +1,10 @@
-// import xs from 'xstream'
-import {div, input, h2, button, ul, li} from '@cycle/dom'
+import {div, input, h2, button, ul, li, p} from '@cycle/dom'
 
-function renderPartySlider (party, vote) {
+function renderPartySlider (party, votes) {
   return div([
-    input(`.${party}E`, {attrs: {type: 'checkbox', checked: vote[1]}}),
-    `${party} ` + vote[0],
-    input(`.${party}`, {attrs: {type: 'range', min: 0, max: 50, step: 0.1, value: vote[0]}})
+    input(`.${party}E`, {attrs: {type: 'checkbox', checked: votes[1]}}),
+    `${party} ` + votes[0],
+    input(`.${party}`, {attrs: {type: 'range', min: 0, max: 50, step: 0.1, value: votes[0]}})
   ])
 }
 
@@ -16,8 +15,15 @@ function renderPartySeats (party, votes) {
   return li(`${party}: ${threshold}, ${votes[1]}`)
 }
 
+function renderSeats (calculate) {
+  console.log(calculate)
+  return div([
+    p('calculate', calculate)
+  ])
+}
+
 export function renderSliders (state$) {
-  return state$.map(({national, labour, greens, nzf, act, top, māori, other, total}) =>
+  return state$.map(({national, labour, greens, nzf, act, top, māori, other, total, calculate}) =>
     div('.sliders', [
       renderPartySlider('National', national),
       renderPartySlider('Labour', labour),
@@ -30,14 +36,15 @@ export function renderSliders (state$) {
       h2(total +'% of votes counted'),
       h2('seats'),
       ul([
-        renderPartySeats('National', national),
-        renderPartySeats('Labour', labour),
-        renderPartySeats('Greens', greens),
-        renderPartySeats('NZF', nzf),
-        renderPartySeats('Act', act),
-        renderPartySeats('TOP', top),
-        renderPartySeats('Māori', māori),
-        renderPartySeats('Other', other)
+        // renderPartySeats('National', national),
+        // renderPartySeats('Labour', labour),
+        // renderPartySeats('Greens', greens),
+        // renderPartySeats('NZF', nzf),
+        // renderPartySeats('Act', act),
+        // renderPartySeats('TOP', top),
+        // renderPartySeats('Māori', māori),
+        // renderPartySeats('Other', other)
+        renderSeats(calculate)
       ])
     ])
   )
