@@ -8,9 +8,11 @@ function renderPartySlider (party, vote) {
     input(`.${party}`, {attrs: {type: 'range', min: 0, max: 50, step: 0.1, value: vote[0]}})
   ])
 }
-  
+
+// preliminary threshold calculation (temporary)
 function renderPartySeats (party, votes) {
-  const threshold = votes[0] < 5 ? (!votes[1] ? votes[0] = 0 : votes[0]) : votes[0]   
+  let seats = null
+  const threshold = votes[0] < 5 ? (!votes[1] ? 0 : 1) : votes[0]   
   return li(`${party}: ${threshold}, ${votes[1]}`)
 }
 
