@@ -1,41 +1,41 @@
 // import xs from 'xstream'
 import {div, input, h2, button, ul, li} from '@cycle/dom'
 
-function renderPartySlider (party, vote, electorate) {
+function renderPartySlider (party, vote) {
   return div([
-    input(`.${party}E`, {attrs: {type: 'checkbox', checked: electorate}}),
-    `${party} ` + vote,
-    input(`.${party}`, {attrs: {type: 'range', min: 0, max: 50, step: 0.1, value: vote}})
+    input(`.${party}E`, {attrs: {type: 'checkbox', checked: vote[1]}}),
+    `${party} ` + vote[0],
+    input(`.${party}`, {attrs: {type: 'range', min: 0, max: 50, step: 0.1, value: vote[0]}})
   ])
 }
   
-function renderPartySeats (party, seats = 2, electorates) {
-  const threshold = seats < 5 ? (!electorates ? seats = 0 : seats) : seats   
-  return li(`${party}: ${threshold}, ${electorates}`)
+function renderPartySeats (party, votes) {
+  const threshold = votes[0] < 5 ? (!votes[1] ? votes[0] = 0 : votes[0]) : votes[0]   
+  return li(`${party}: ${threshold}, ${votes[1]}`)
 }
 
 export function renderSliders (state$) {
-  return state$.map(({national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE, total}) =>
+  return state$.map(({national, labour, greens, nzf, act, top, māori, other, total}) =>
     div('.sliders', [
-      renderPartySlider('National', national, nationalE),
-      renderPartySlider('Labour', labour, labourE),
-      renderPartySlider('Greens', greens, greensE),
-      renderPartySlider('NZF', nzf, nzfE),
-      renderPartySlider('Act', act, actE),
-      renderPartySlider('TOP', top, topE),
-      renderPartySlider('Māori', māori, māoriE),
-      renderPartySlider('Other', other, otherE),
+      renderPartySlider('National', national),
+      renderPartySlider('Labour', labour),
+      renderPartySlider('Greens', greens),
+      renderPartySlider('NZF', nzf),
+      renderPartySlider('Act', act),
+      renderPartySlider('TOP', top),
+      renderPartySlider('Māori', māori),
+      renderPartySlider('Other', other),
       h2(total +'% of votes counted'),
       h2('seats'),
       ul([
-        renderPartySeats('National', national, nationalE),
-        renderPartySeats('Labour', labour, labourE),
-        renderPartySeats('Greens', greens, greensE),
-        renderPartySeats('NZF', nzf, nzfE),
-        renderPartySeats('Act', act, actE),
-        renderPartySeats('TOP', top, topE),
-        renderPartySeats('Māori', māori, māoriE),
-        renderPartySeats('Other', other, otherE)
+        renderPartySeats('National', national),
+        renderPartySeats('Labour', labour),
+        renderPartySeats('Greens', greens),
+        renderPartySeats('NZF', nzf),
+        renderPartySeats('Act', act),
+        renderPartySeats('TOP', top),
+        renderPartySeats('Māori', māori),
+        renderPartySeats('Other', other)
       ])
     ])
   )

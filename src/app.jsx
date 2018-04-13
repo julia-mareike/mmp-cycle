@@ -68,8 +68,15 @@ function model(actions) {
 
   return xs.combine(national$, labour$, greens$, nzf$, act$, top$, māori$, other$, nationalE$, labourE$, greensE$, nzfE$, actE$, topE$, māoriE$, otherE$)
   .map(([national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE]) => {
-    return {national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE, 
-      total: total(national, labour, greens, nzf, act, top, māori, other)}
+    return {national: [national, nationalE],
+            labour: [labour, labourE],
+            greens: [greens, greensE],
+            nzf: [nzf, nzfE],
+            act: [act, actE], 
+            top: [top, topE], 
+            māori: [māori, māoriE], 
+            other: [other, otherE], 
+            total: total(national, labour, greens, nzf, act, top, māori, other)}
   })
 }
 
