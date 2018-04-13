@@ -4,51 +4,11 @@
 */                
 
 import xs from 'xstream'
-import {div, input, h2, button, ul, li} from '@cycle/dom'
-import {calculateVotes, saintLague} from './functions.js'
-
-function renderPartySlider (party, vote, electorate) {
-return div([
-  input(`.${party}E`, {attrs: {type: 'checkbox', checked: electorate}}),
-  `${party} ` + vote,
-  input(`.${party}`, {attrs: {type: 'range', min: 0, max: 50, step: 0.1, value: vote}})
-])
-}
-
-function renderPartySeats (party, seats = 2, electorates) {
-  const threshold = seats < 5 ? (!electorates ? seats = 0 : seats) : seats   
-  return li(`${party}: ${threshold}, ${electorates}`)
-}
-  
-function total (national, labour, greens, nzf, act, top, māori, other) {
-  return (+national + +labour + +greens + +nzf + +act + +top + +māori + +other).toFixed(1)  
-}
+import {calculate} from './functions.js'
+import {renderSliders, total} from './utils.js'
 
 function view(state$) {
-  return state$.map(({national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE, total}) =>
-    div('.sliders', [
-      renderPartySlider('National', national, nationalE),
-      renderPartySlider('Labour', labour, labourE),
-      renderPartySlider('Greens', greens, greensE),
-      renderPartySlider('NZF', nzf, nzfE),
-      renderPartySlider('Act', act, actE),
-      renderPartySlider('TOP', top, topE),
-      renderPartySlider('Māori', māori, māoriE),
-      renderPartySlider('Other', other, otherE),
-      h2(total +'% of votes counted'),
-      h2('seats'),
-      ul([
-        renderPartySeats('National', national, nationalE),
-        renderPartySeats('Labour', labour, labourE),
-        renderPartySeats('Greens', greens, greensE),
-        renderPartySeats('NZF', nzf, nzfE),
-        renderPartySeats('Act', act, actE),
-        renderPartySeats('TOP', top, topE),
-        renderPartySeats('Māori', māori, māoriE),
-        renderPartySeats('Other', other, otherE)
-      ])
-    ])
-  )
+      return renderSliders(state$) 
 }
 
 function intent(domSource) {
@@ -89,26 +49,21 @@ function intent(domSource) {
 }
 
 function model(actions) {
-  const national$ = actions.changeNational$.startWith(44.5)
-  const nationalE$ = actions.changeNationalE$.startWith(true)
-  const labour$ = actions.changeLabour$.startWith(36.9)
-  const labourE$ = actions.changeLabourE$.startWith(true)  
-  const greens$ = actions.changeGreens$.startWith(6.3)
-  const greensE$ = actions.changeGreensE$.startWith(false) 
-  const nzf$ = actions.changeNZF$.startWith(7.2)
-  const nzfE$ = actions.changeNZFE$.startWith(false)  
-  const act$ = actions.changeAct$.startWith(0.5)
-  const actE$ = actions.changeActE$.startWith(true)  
-  const top$ = actions.changeTOP$.startWith(2.4)
-  const topE$ = actions.changeTOPE$.startWith(false)  
-  const māori$ = actions.changeMāori$.startWith(1.2)
-  const māoriE$ = actions.changeMāoriE$.startWith(false)  
-  const other$ = actions.changeOther$.startWith(1.0)
-  const otherE$ = actions.changeOtherE$.startWith(false)
+  const national$ = xs.combine(actions.changeNational$.startWith(44.5), actions.changeNationalE$.startWith(true))
+  const labour$ = xs.combine(actions.changeLabour$.startWith(36.9), actions.changeLabourE$.startWith(true))
+  const greens$ = xs.combine(actions.changeGreens$.startWith(6.3), actions.changeGreensE$.startWith(false))
+  const nzf$ = xs.combine(actions.changeNZF$.startWith(7.2), actions.changeNZFE$.startWith(false))
+  const act$ = xs.combine(actions.changeAct$.startWith(0.5), actions.changeActE$.startWith(true))
+  const top$ = xs.combine(actions.changeTOP$.startWith(2.4), actions.changeTOPE$.startWith(false))
+  const māori$ = xs.combine(actions.changeMāori$.startWith(1.2), actions.changeMāoriE$.startWith(false))
+  const other$ = xs.combine(actions.changeOther$.startWith(1.0), actions.changeOtherE$.startWith(false))
 
-  return xs.combine(national$, labour$, greens$, nzf$, act$, top$, māori$, other$, nationalE$, labourE$, greensE$, nzfE$, actE$, topE$, māoriE$, otherE$)
-  .map(([national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE]) => {
-    return {national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE, total: total(national, labour, greens, nzf, act, top, māori, other)}
+  return xs.combine(national$, labour$, greens$, nzf$, act$, top$, māori$, other$)
+  .map(([national, labour, greens, nzf, act, top, māori, other]) => {
+    return {national, labour, greens, nzf, act, top, māori, other, 
+            total: total(national, labour, greens, nzf, act, top, māori, other),
+            calculate: calculate([national, labour, greens, nzf, act, top, māori, other])
+          }
   })
 }
 
