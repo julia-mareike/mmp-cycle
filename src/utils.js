@@ -42,5 +42,5 @@ export function renderSliders (state$) {
 }
 
 export function total (national, labour, greens, nzf, act, top, māori, other) {
-  return (+national + +labour + +greens + +nzf + +act + +top + +māori + +other).toFixed(1)  
+  return (+national[0] + +labour[0] + +greens[0] + +nzf[0] + +act[0] + +top[0] + +māori[0] + +other[0]).toFixed(1)  
 }

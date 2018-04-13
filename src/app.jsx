@@ -49,33 +49,18 @@ function intent(domSource) {
 }
 
 function model(actions) {
-  const national$ = actions.changeNational$.startWith(44.5)
-  const nationalE$ = actions.changeNationalE$.startWith(true)
-  const labour$ = actions.changeLabour$.startWith(36.9)
-  const labourE$ = actions.changeLabourE$.startWith(true)  
-  const greens$ = actions.changeGreens$.startWith(6.3)
-  const greensE$ = actions.changeGreensE$.startWith(false) 
-  const nzf$ = actions.changeNZF$.startWith(7.2)
-  const nzfE$ = actions.changeNZFE$.startWith(false)  
-  const act$ = actions.changeAct$.startWith(0.5)
-  const actE$ = actions.changeActE$.startWith(true)  
-  const top$ = actions.changeTOP$.startWith(2.4)
-  const topE$ = actions.changeTOPE$.startWith(false)  
-  const māori$ = actions.changeMāori$.startWith(1.2)
-  const māoriE$ = actions.changeMāoriE$.startWith(false)  
-  const other$ = actions.changeOther$.startWith(1.0)
-  const otherE$ = actions.changeOtherE$.startWith(false)
+  const national$ = xs.combine(actions.changeNational$.startWith(44.5), actions.changeNationalE$.startWith(true))
+  const labour$ = xs.combine(actions.changeLabour$.startWith(36.9), actions.changeLabourE$.startWith(true))
+  const greens$ = xs.combine(actions.changeGreens$.startWith(6.3), actions.changeGreensE$.startWith(false))
+  const nzf$ = xs.combine(actions.changeNZF$.startWith(7.2), actions.changeNZFE$.startWith(false))
+  const act$ = xs.combine(actions.changeAct$.startWith(0.5), actions.changeActE$.startWith(true))
+  const top$ = xs.combine(actions.changeTOP$.startWith(2.4), actions.changeTOPE$.startWith(false))
+  const māori$ = xs.combine(actions.changeMāori$.startWith(1.2), actions.changeMāoriE$.startWith(false))
+  const other$ = xs.combine(actions.changeOther$.startWith(1.0), actions.changeOtherE$.startWith(false))
 
-  return xs.combine(national$, labour$, greens$, nzf$, act$, top$, māori$, other$, nationalE$, labourE$, greensE$, nzfE$, actE$, topE$, māoriE$, otherE$)
+  return xs.combine(national$, labour$, greens$, nzf$, act$, top$, māori$, other$)
   .map(([national, labour, greens, nzf, act, top, māori, other, nationalE, labourE, greensE, nzfE, actE, topE, māoriE, otherE]) => {
-    return {national: [national, nationalE],
-            labour: [labour, labourE],
-            greens: [greens, greensE],
-            nzf: [nzf, nzfE],
-            act: [act, actE], 
-            top: [top, topE], 
-            māori: [māori, māoriE], 
-            other: [other, otherE], 
+    return {national, labour, greens, nzf, act, top, māori, other, 
             total: total(national, labour, greens, nzf, act, top, māori, other)}
   })
 }
