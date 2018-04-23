@@ -15,11 +15,16 @@ function renderPartySeats (party, votes) {
   return li(`${party}: ${threshold}, ${votes[1]}`)
 }
 
+// refactor to map
 function renderSeats (calculate) {
-  console.log(calculate)
+  console.log('calculate', calculate)
   return div([
-    p('calculate', calculate)
-  ])
+      li(calculate[0].party + calculate[0].allocated),
+      li(calculate[1].party + calculate[1].allocated),
+      li(calculate[2].party + calculate[2].allocated),
+      li(calculate[3].party + calculate[3].allocated),
+      li(calculate[4].party + calculate[4].allocated)
+    ])
 }
 
 export function renderSliders (state$) {
