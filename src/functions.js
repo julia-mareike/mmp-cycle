@@ -24,7 +24,10 @@ export function calculate ([national, labour, greens, nzf, act, top, māori, oth
 
   for (let party of overhang) {
     const target = _.findIndex(allVotes, ['party', party[0]])
-    if (allVotes[target]) allVotes[target].allocated = party[1]
+    if (allVotes[target]) {
+      allVotes[target].allocated = 1
+      allVotes[target].overhang = true
+    }
   }
   saintLague(allVotes)
   return allVotes
@@ -44,6 +47,7 @@ function createVoteObject (obj) {
       newObject.votes = votes
       newObject.adjusted = votes
       newObject.allocated = 0
+      newObject.overhang = false
       array.push(newObject)
     }
   })
@@ -59,7 +63,7 @@ function saintLague (totals, idx = 0, seats = 120) {
     }
     const max = _.max(array) // find the current highest value
     const current = _.indexOf(array, max)
-    totals[current].allocated++ // increase seat allocation
+    if (!totals[current].overhang) totals[current].allocated++ // increase seat allocation
     totals[current].adjusted = formula(totals[current].votes, totals[current].allocated) // remove & replace highest value
     saintLague(totals, idx++, --seats) // continue!
   }
