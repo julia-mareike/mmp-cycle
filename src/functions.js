@@ -5,24 +5,23 @@ function adjustVotes (list) {
   const adjustedVotes = {}
   for (let party in list) {
     const newVote = (100 / subtotal) * list[party]
-    adjustedVotes[party] = Number(newVote)
+    if (adjustedVotes) adjustedVotes[party] = Number(newVote)
   }
   return adjustedVotes
 }
 
-export function calculate([national, labour, greens, nzf, act, top, māori, other]) {
+export function calculate ([national, labour, greens, nzf, act, top, māori, other]) {
   const electorates = {national: national[1], labour: labour[1], greens: greens[1], nzf: nzf[1], act: act[1], top: top[1], māori: māori[1], other: other[1]}
   const rawVotes = {national: national[0], labour: labour[0], greens: greens[0], nzf: nzf[0], act: act[0], top: top[0], māori: māori[0], other: other[0]}
-//   calculateVotes(electorates, rawVotes)
-// }
+  //   calculateVotes(electorates, rawVotes)
+  // }
 
-
-// function calculateVotes (electorates, rawVotes) {
+  // function calculateVotes (electorates, rawVotes) {
 
   const overhang = []
 
   for (let party in rawVotes) {
-    rawVotes[party] < 5 ? (!electorates[party] ? rawVotes[party] = 0 : overhang.push([party, electorates[party]])) && console.log('overhang', party): console.log('ok', party)
+    rawVotes[party] < 5 ? (!electorates[party] ? rawVotes[party] = 0 : overhang.push([party, electorates[party]])) && console.log('overhang', party) : console.log('ok', party)
   }
   const proportional = adjustVotes(rawVotes)
   let allVotes = createVoteObject(proportional)
@@ -70,6 +69,6 @@ function saintLague (totals, idx = 0, seats = 120) {
   }
   if (seats === 0) {
     console.log('total', totals)
-  return totals
+    return totals
   }
 }
