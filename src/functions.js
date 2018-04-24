@@ -12,11 +12,7 @@ function adjustVotes (list) {
 
 export function calculate ([national, labour, greens, nzf, act, top, māori, other]) {
   const electorates = {national: national[1], labour: labour[1], greens: greens[1], nzf: nzf[1], act: act[1], top: top[1], māori: māori[1], other: other[1]}
-  const rawVotes = {national: national[0], labour: labour[0], greens: greens[0], nzf: nzf[0], act: act[0], top: top[0], māori: māori[0], other: other[0]}
-  //   calculateVotes(electorates, rawVotes)
-  // }
-
-  // function calculateVotes (electorates, rawVotes) {
+  const rawVotes = {national: Number(national[0]), labour: Number(labour[0]), greens: Number(greens[0]), nzf: Number(nzf[0]), act: Number(act[0]), top: Number(top[0]), māori: Number(māori[0]), other: Number(other[0])}
 
   const overhang = []
 
@@ -25,10 +21,10 @@ export function calculate ([national, labour, greens, nzf, act, top, māori, oth
   }
   const proportional = adjustVotes(rawVotes)
   let allVotes = createVoteObject(proportional)
-  console.log('proportional', allVotes)
+
   for (let party of overhang) {
     const target = _.findIndex(allVotes, ['party', party[0]])
-    allVotes[target].allocated = party[1]
+    if (allVotes[target]) allVotes[target].allocated = party[1]
   }
   saintLague(allVotes)
   return allVotes
@@ -68,7 +64,6 @@ function saintLague (totals, idx = 0, seats = 120) {
     saintLague(totals, idx++, --seats) // continue!
   }
   if (seats === 0) {
-    console.log('total', totals)
     return totals
   }
 }

@@ -10,7 +10,6 @@ function renderPartySlider (party, votes) {
 
 // refactor to map
 function renderSeats (calculate) {
-  console.log('calculate', calculate)
   return div([
     li(calculate[0].party + calculate[0].allocated),
     li(calculate[1].party + calculate[1].allocated),
@@ -34,14 +33,6 @@ export function renderSliders (state$) {
       h2(total + '% of votes counted'),
       h2('seats'),
       ul([
-        // renderPartySeats('National', national),
-        // renderPartySeats('Labour', labour),
-        // renderPartySeats('Greens', greens),
-        // renderPartySeats('NZF', nzf),
-        // renderPartySeats('Act', act),
-        // renderPartySeats('TOP', top),
-        // renderPartySeats('Māori', māori),
-        // renderPartySeats('Other', other)
         renderSeats(calculate)
       ])
     ])
